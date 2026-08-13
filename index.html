@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="实习德育伴 —— 中职生跟岗实习随身德育伙伴：匿名心事小纸条、AI 温和引导、真实案例匹配、成长自测与教师共性问题看板。">
+<title>实习德育伴 · 中职生跟岗实习德育伙伴</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ========== 顶部导航 ========== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-logo">🌱</span>
+      <div class="brand-text">
+        <h1>实习德育伴</h1>
+        <p>中职生跟岗实习 · 随身德育伙伴</p>
+      </div>
+    </div>
+    <nav class="role-switch" id="roleSwitch">
+      <button class="role-btn active" data-role="student">学生端</button>
+      <button class="role-btn" data-role="teacher">教师端</button>
+    </nav>
+    <button class="icon-btn" id="openSettings" title="设置" aria-label="设置">⚙️</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ===================== 学生端 ===================== -->
+  <section id="studentView" class="view active">
+
+    <div class="seg-tabs" id="studentTabs">
+      <button class="seg-btn active" data-tab="letter">💌 心事小纸条</button>
+      <button class="seg-btn" data-tab="cases">📚 真实案例</button>
+      <button class="seg-btn" data-tab="selftest">📊 成长自测</button>
+    </div>
+
+    <!-- 心事小纸条 -->
+    <div class="panel active" id="panel-letter">
+      <div class="panel-head">
+        <h2>💌 心事小纸条</h2>
+        <p class="hint">匿名倾诉，AI 温和引导，无需姓名，你的困惑会得到尊重与倾听。</p>
+      </div>
+
+      <div class="chat" id="chatBox">
+        <div class="msg ai">
+          <div class="avatar">🌱</div>
+          <div class="bubble">
+            嗨，我是你的实习德育伙伴 🌱<br><br>
+            在跟岗实习里遇到的事——师傅太严格、工资迟迟不发、同学处不来、或者就是有点迷茫，都可以写给我。<br><br>
+            这里只有你知道自己是谁，我会认真听，陪你一起想办法。
+          </div>
+        </div>
+      </div>
+
+      <div class="composer">
+        <textarea id="letterInput" rows="2" maxlength="500"
+          placeholder="把心里的困惑写下来吧…（500字以内）"></textarea>
+        <button class="primary-btn" id="sendLetter">发送</button>
+      </div>
+      <div class="composer-tip">🔒 内容仅保存在你的本机浏览器，不会上传任何服务器</div>
+    </div>
+
+    <!-- 真实案例库 -->
+    <div class="panel" id="panel-cases">
+      <div class="panel-head">
+        <h2>📚 真实案例库</h2>
+        <p class="hint">「别人也遇到过」——真实案例基于脱敏素材整理，看看与你相似的经历如何被化解。</p>
+      </div>
+      <div class="case-tools">
+        <input id="caseSearch" type="search" placeholder="搜索关键词，如：工资、师傅、不想干…">
+        <select id="caseFilter">
+          <option value="">全部分类</option>
+          <option value="劳资">劳资权益</option>
+          <option value="人际">人际关系</option>
+          <option value="规划">职业规划</option>
+          <option value="诚信">诚信守规</option>
+        </select>
+      </div>
+      <div class="case-list" id="caseList"></div>
+    </div>
+
+    <!-- 成长自测 -->
+    <div class="panel" id="panel-selftest">
+      <div class="panel-head">
+        <h2>📊 实习适应力自测</h2>
+        <p class="hint">花 2 分钟回答 10 道题，了解自己的实习状态，并获得针对性建议。</p>
+      </div>
+      <div id="selftestArea"></div>
+    </div>
+
+  </section>
+
+  <!-- ===================== 教师端 ===================== -->
+  <section id="teacherView" class="view">
+
+    <div class="seg-tabs" id="teacherTabs">
+      <button class="seg-btn active" data-tab="board">📋 共性看板</button>
+      <button class="seg-btn" data-tab="ledger">📄 德育台账</button>
+      <button class="seg-btn" data-tab="alert">⚠️ 预警干预</button>
+      <button class="seg-btn" data-tab="export">📤 数据导出</button>
+    </div>
+
+    <!-- 共性问题看板 -->
+    <div class="panel active" id="panel-board">
+      <div class="panel-head">
+        <h2>📋 共性问题推送看板</h2>
+        <p class="hint">按分类聚合学生匿名提问（脱敏），发现班级层面的共性问题。</p>
+      </div>
+      <div class="board-tools">
+        <button class="ghost-btn" id="importDemo">导入示例数据</button>
+        <button class="ghost-btn" id="clearRecords">清空记录</button>
+        <button class="primary-btn" id="aiInsight">✨ AI 共性洞察</button>
+      </div>
+      <div class="stat-cards" id="statCards"></div>
+      <div id="boardDetail"></div>
+    </div>
+
+    <!-- 德育台账 -->
+    <div class="panel" id="panel-ledger">
+      <div class="panel-head">
+        <h2>📄 德育台账自动生成</h2>
+        <p class="hint">基于提问记录自动汇总生成德育工作台账，可编辑后打印 / 导出。</p>
+      </div>
+      <div class="ledger-tools">
+        <label>统计周期
+          <select id="ledgerPeriod">
+            <option value="week">近 7 天</option>
+            <option value="month">近 30 天</option>
+            <option value="all">全部</option>
+          </select>
+        </label>
+        <button class="primary-btn" id="genLedger">✨ 生成台账</button>
+      </div>
+      <div id="ledgerOutput" class="ledger-out">
+        <div class="placeholder">点击「生成台账」开始 ✨</div>
+      </div>
+    </div>
+
+    <!-- 预警干预 -->
+    <div class="panel" id="panel-alert">
+      <div class="panel-head">
+        <h2>⚠️ 预警 / 干预建议</h2>
+        <p class="hint">根据提问中的风险信号自动分级预警，并给出建议动作。</p>
+      </div>
+      <div class="alert-legend">
+        <span class="tag tag-high">🔴 高优先级</span>
+        <span class="tag tag-medium">🟠 中优先级</span>
+        <span class="tag tag-low">🟡 低优先级</span>
+      </div>
+      <div id="alertList"></div>
+      <button class="primary-btn" id="aiAdvice" style="margin-top:12px">✨ 生成干预建议</button>
+    </div>
+
+    <!-- 数据导出 -->
+    <div class="panel" id="panel-export">
+      <div class="panel-head">
+        <h2>📤 数据导出</h2>
+        <p class="hint">导出脱敏后的提问记录与台账，供存档 / 上报使用。</p>
+      </div>
+      <div class="export-cards">
+        <div class="export-card">
+          <div class="ec-icon">📄</div>
+          <h3>导出台账 PDF</h3>
+          <p>打开打印预览，保存为 PDF（推荐系统打印对话框）</p>
+          <button class="primary-btn" id="exportPdf">打印 / 存 PDF</button>
+        </div>
+        <div class="export-card">
+          <div class="ec-icon">📊</div>
+          <h3>导出记录 Excel / CSV</h3>
+          <p>导出全部脱敏提问记录，可用 Excel 打开分析</p>
+          <button class="primary-btn" id="exportCsv">导出 CSV</button>
+        </div>
+      </div>
+      <div class="privacy-note">
+        🔒 <strong>隐私与合规说明</strong>：本工具全部数据仅存于浏览器本地（localStorage），不上传任何服务器；
+        展示与导出内容均为脱敏数据（不包含姓名等可识别信息）。正式用于教学场景时，建议按学校要求接入受控后端并加密存储。
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer class="footer">
+  <p>实习德育伴 · 德育引导大模型引擎（deepseek-v4-flash）· 真实案例库 + 问题分类 + 共性聚类 + 台账生成</p>
+  <p>⚠️ 本工具为教育辅助，遇紧急或重大情况请第一时间联系学校实习指导老师、德育处或拨打 12355 青少年服务热线。</p>
+</footer>
+
+<!-- ========== 设置弹窗 ========== -->
+<div class="modal-mask" id="settingsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>⚙️ 设置</h2>
+      <button class="icon-btn" data-close="settingsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field">
+        <span>API Key（deepseek-v4-flash · 商汤 Token Plan）</span>
+        <input id="setApiKey" type="password" placeholder="sk-… 粘贴你的专属 Key" autocomplete="off">
+        <small>仅保存在本机浏览器，不出现在任何代码与服务器中。Key 获取：platform.sensenova.cn → 快速接入。</small>
+      </label>
+      <label class="field">
+        <span>调用通道</span>
+        <select id="setMode">
+          <option value="direct">直连 token.sensenova.cn（需浏览器支持跨域）</option>
+          <option value="proxy">代理中转（推荐，绕过跨域限制）</option>
+        </select>
+      </label>
+      <label class="field" id="proxyField">
+        <span>代理地址（Cloudflare Worker URL）</span>
+        <input id="setProxyUrl" type="url" placeholder="https://your-worker.workers.dev">
+        <small>用仓库 worker/proxy.js 在 Cloudflare 免费部署后填入。</small>
+      </label>
+      <label class="field">
+        <span>回复温度（越低越稳重）</span>
+        <input id="setTemp" type="range" min="0" max="1.5" step="0.1" value="0.7">
+        <small id="tempLabel">0.7</small>
+      </label>
+      <button class="primary-btn" id="testConn">🔌 测试连接</button>
+      <div id="testResult" class="test-result"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="ghost-btn" data-close="settingsModal">取消</button>
+      <button class="primary-btn" id="saveSettings">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 打印区域（台账导出） -->
+<div id="printArea"></div>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
