@@ -110,9 +110,13 @@ const AI = {
         }),
       });
     } catch (e) {
+      const cfg = Settings.get();
+      const hint = cfg.mode === "proxy"
+        ? "请检查：① 已在 Cloudflare 部署 worker/proxy.js；② 代理地址填的是 https://xxx.workers.dev；③ 地址无多余空格或引号。"
+        : "商汤接口服务端不支持浏览器跨域（CORS 预检不完善），直连模式在浏览器中必然被拦截。请按设置面板的指引部署代理后，切换为「代理中转」模式。";
       throw {
         kind: "network",
-        msg: "网络请求失败，可能是浏览器跨域（CORS）拦截。请在设置中切换为「代理中转」模式。",
+        msg: "网络请求失败：" + ((e && e.message) ? e.message : String(e)) + "。" + hint,
       };
     }
 
@@ -732,12 +736,29 @@ function saveSettings() {
 }
 
 async function testConn() {
-  const s = Settings.get();
   const btn = $("#testConn");
   btn.disabled = true;
   const out = $("#testResult");
   out.className = "test-result";
-  if (!s.apiKey) { out.textContent = "请先填写 API Key"; out.classList.add("err"); btn.disabled = false; return; }
+  // 直接读取当前表单值（未点保存也能测到最新输入）
+  const tmp = {
+    apiKey: $("#setApiKey").value.trim(),
+    mode: $("#setMode").value,
+    proxyUrl: $("#setProxyUrl").value.trim().replace(/\/+$/, ""),
+    temp: Number($("#setTemp").value) || 0.7,
+  };
+  if (!tmp.apiKey) { out.textContent = "请先填写 API Key"; out.classList.add("err"); btn.disabled = false; return; }
+  if (tmp.mode === "proxy") {
+    if (!tmp.proxyUrl) {
+      out.textContent = "代理模式下请先填写代理地址（未部署？见下方 3 步部署指引）";
+      out.classList.add("err"); btn.disabled = false; return;
+    }
+    if (/your-worker/.test(tmp.proxyUrl)) {
+      out.textContent = "代理地址仍是占位符 your-worker.workers.dev！请先在 Cloudflare 部署并粘贴真实地址";
+      out.classList.add("err"); btn.disabled = false; return;
+    }
+  }
+  Settings.save(tmp);
   out.textContent = "连接中…";
   try {
     const r = await AI.chat([{ role: "user", content: "你好，请只回复两个字：正常" }]);

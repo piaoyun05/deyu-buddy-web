@@ -206,14 +206,21 @@
       <label class="field">
         <span>调用通道</span>
         <select id="setMode">
-          <option value="direct">直连 token.sensenova.cn（需浏览器支持跨域）</option>
-          <option value="proxy">代理中转（推荐，绕过跨域限制）</option>
+          <option value="direct">直连商汤接口（服务端不支持浏览器跨域，可能失败）</option>
+          <option value="proxy">代理中转（推荐，需部署 Cloudflare Worker）</option>
         </select>
       </label>
       <label class="field" id="proxyField">
         <span>代理地址（Cloudflare Worker URL）</span>
-        <input id="setProxyUrl" type="url" placeholder="https://your-worker.workers.dev">
-        <small>用仓库 worker/proxy.js 在 Cloudflare 免费部署后填入。</small>
+        <input id="setProxyUrl" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off">
+        <details class="deploy-guide">
+          <summary>📘 还没部署代理？按这 3 步走（免费，约 3 分钟）</summary>
+          <ol>
+            <li>打开 <b>dash.cloudflare.com</b> 用邮箱注册/登录 → 左侧 <b>Workers &amp; Pages</b> → <b>创建</b> → 名称填 <code>deyu-proxy</code> → 部署</li>
+            <li>点 <b>编辑代码</b>，把本项目 <code>worker/proxy.js</code> 的全部内容粘贴覆盖默认代码 → 点 <b>部署</b>（右上角）</li>
+            <li>把生成的地址 <code>https://deyu-proxy.你的子域.workers.dev</code> 完整复制，粘贴到上面的「代理地址」框</li>
+          </ol>
+        </details>
       </label>
       <label class="field">
         <span>回复温度（越低越稳重）</span>

@@ -28,12 +28,24 @@
 > 模型名固定为 `deepseek-v4-flash`，接口 `https://token.sensenova.cn/v1/chat/completions`。
 > 免费额度为**滚动窗口**：每 5 小时 500 次调用。应用内会显示已用次数。
 
-### 2. 选择调用通道
+### 2. 选择调用通道（重要）
 
-- **直连**（默认）：浏览器直接请求 token.sensenova.cn。多数网络可用；若遇跨域拦截，请切换代理。
-- **代理中转**（推荐，更稳）：部署下方的 Cloudflare Worker，填入 Worker 地址即可。
+> ⚠️ **实测结论**：商汤 `token.sensenova.cn` 的 CORS 预检（OPTIONS）返回 404 且缺少 `Access-Control-Allow-Methods / Allow-Headers` 头，浏览器发起的带 `Authorization` 请求**必然被跨域拦截**。因此**请直接使用「代理中转」模式**，不要使用直连。
 
-### 3. 部署到 GitHub Pages
+- **代理中转**（✅ 推荐 / 必须）：部署下方的 Cloudflare Worker，在应用「设置 → 调用通道」选「代理中转」，填入 Worker 地址即可。免费、约 3 分钟完成。
+- **直连**（❌ 不可用）：仅供无拦截的受限场景（如部分本地插件内嵌 WebView），浏览器常规环境会被 CORS 拦截。
+
+### 3. 部署 Cloudflare Worker 代理（必须，约 3 分钟）
+
+1. 打开 https://dash.cloudflare.com/ → 用邮箱注册/登录（免费）
+2. 左侧 **Workers & Pages** → **创建** → 名称填 `deyu-proxy` → **部署**
+3. 点击 **编辑代码**，把 `worker/proxy.js` 的全部内容粘贴覆盖默认代码 → 右上角 **部署**
+4. 记下生成的地址，形如 `https://deyu-proxy.<你的子域>.workers.dev`
+5. 打开应用 → ⚙️ 设置 → 调用通道选「代理中转」→ 把该地址填入「代理地址」→ **🔌 测试连接** 确认
+
+> 排查：若「测试连接」报错，在设置面板点开「📘 还没部署代理？」展开的指引逐条核对。Worker 地址若填成 `your-worker.workers.dev`（未替换）会连到不存在的域名而失败。
+
+### 4. 部署到 GitHub Pages
 
 ```bash
 # 方式 A：用 Git 命令行
@@ -49,12 +61,6 @@ git push -u origin main
 # 2. Settings → Pages → Source 选择 main 分支 / root 目录
 # 3. 访问 https://<你的用户名>.github.io/<仓库名>/
 ```
-
-### 4.（可选）部署 Cloudflare Worker 代理
-
-1. 打开 https://dash.cloudflare.com/ → Workers & Pages → 创建 Worker
-2. 复制 `worker/proxy.js` 全部内容粘贴进去 → 部署
-3. 将得到的 `https://xxx.workers.dev` 填入应用「设置 → 代理地址」
 
 ## 📁 项目结构
 

@@ -299,6 +299,35 @@ input, select, textarea { font-family: inherit; font-size: 15px; color: var(--in
 .test-result.ok { color: var(--primary-deep); }
 .test-result.err { color: var(--danger); white-space: pre-wrap; }
 
+/* ---------- 代理部署指引 ---------- */
+.deploy-guide {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #f0f6ff;
+  border: 1px solid #cfe0ff;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.deploy-guide summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary-deep);
+  list-style: none;
+}
+.deploy-guide summary::-webkit-details-marker { display: none; }
+.deploy-guide summary::before { content: "▸ "; }
+.deploy-guide[open] summary::before { content: "▾ "; }
+.deploy-guide ol { margin: 8px 0 0; padding-left: 18px; line-height: 1.7; }
+.deploy-guide code {
+  background: #eef3fb;
+  border: 1px solid #dbe6f5;
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 11px;
+  word-break: break-all;
+}
+
 /* ---------- Toast ---------- */
 .toast {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
