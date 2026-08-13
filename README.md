@@ -1,6 +1,6 @@
 # 🌱 实习德育伴 · 中职生跟岗实习随身德育伙伴
 
-面向中职学校跟岗实习学生的德育陪伴网页应用。AI 引擎使用 **deepseek-v4-flash**（商汤日日新 Token Plan 免费额度，**每 5 小时 500 次调用**），纯前端架构，可免费部署到 **GitHub Pages**。
+面向中职学校跟岗实习学生的德育陪伴网页应用。AI 引擎使用 **deepseek-v4-flash**（DeepSeek 官方 API，**浏览器可直连，无需代理**），纯前端架构，可免费部署到 **GitHub Pages**。
 
 ## ✨ 功能（对照原始方案）
 
@@ -19,23 +19,22 @@
 
 ## 🚀 快速使用
 
-### 1. 获取免费 API Key（商汤 Token Plan）
+### 1. 获取 API Key（DeepSeek 官方）
 
-1. 打开 https://platform.sensenova.cn/ ，用手机号注册登录
-2. 找到「快速接入」/ Token Plan 免费申请入口，复制专属 **API Key**
-3. 打开应用，点右上角 ⚙️，粘贴 Key 并保存
+1. 打开 https://platform.deepseek.com/ ，注册 / 登录
+2. 充值少量余额（最低 ¥10，`deepseek-v4-flash` 极便宜：输入 ¥1 / 百万 token、输出 ¥2 / 百万 token）
+3. 进入 **API Keys** 页 → **创建 API Key** → 复制（格式 `sk-…`，只完整显示一次，注意保存）
+4. 打开应用，点右上角 ⚙️，粘贴 Key 并保存
 
-> 模型名固定为 `deepseek-v4-flash`，接口 `https://token.sensenova.cn/v1/chat/completions`。
-> 免费额度为**滚动窗口**：每 5 小时 500 次调用。应用内会显示已用次数。
+> 模型名固定为 `deepseek-v4-flash`，接口 `https://api.deepseek.com/v1/chat/completions`，OpenAI 兼容格式。
+> 官方已实测支持浏览器跨域（CORS 预检返回 200），**无需任何代理**，按 token 计费、无次数限制。
 
-### 2. 选择调用通道（重要）
+### 2. 选择调用通道
 
-> ⚠️ **实测结论**：商汤 `token.sensenova.cn` 的 CORS 预检（OPTIONS）返回 404 且缺少 `Access-Control-Allow-Methods / Allow-Headers` 头，浏览器发起的带 `Authorization` 请求**必然被跨域拦截**。因此**请直接使用「代理中转」模式**，不要使用直连。
+- **直连**（✅ 默认 / 推荐）：浏览器直接请求 `api.deepseek.com`。官方服务端已正确返回 CORS 预检响应，常规环境均可直连，无需部署任何额外服务。
+- **代理中转**（🛟 兜底，可选）：仅当极少数网络环境直连异常时，才部署下方 Cloudflare Worker 作为兜底通道。
 
-- **代理中转**（✅ 推荐 / 必须）：部署下方的 Cloudflare Worker，在应用「设置 → 调用通道」选「代理中转」，填入 Worker 地址即可。免费、约 3 分钟完成。
-- **直连**（❌ 不可用）：仅供无拦截的受限场景（如部分本地插件内嵌 WebView），浏览器常规环境会被 CORS 拦截。
-
-### 3. 部署 Cloudflare Worker 代理（必须，约 3 分钟）
+### 3.（可选）部署 Cloudflare Worker 代理兜底（约 3 分钟）
 
 1. 打开 https://dash.cloudflare.com/ → 用邮箱注册/登录（免费）
 2. 左侧 **Workers & Pages** → **创建** → 名称填 `deyu-proxy` → **部署**
@@ -70,7 +69,7 @@ xiyi-deyu-buddy/
 ├── style.css       # 样式（响应式 / 打印样式）
 ├── app.js          # 全部逻辑：AI 引擎、案例库、自测、教师端聚合等
 ├── worker/
-│   └── proxy.js    # Cloudflare Worker 代理（绕过跨域）
+│   └── proxy.js    # Cloudflare Worker 代理（可选兜底，直连异常时才需部署）
 └── README.md
 ```
 

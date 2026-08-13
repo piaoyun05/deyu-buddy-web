@@ -1,10 +1,10 @@
 /**
  * 实习德育伴 · Cloudflare Worker 代理
  * ---------------------------------------------------------------
- * 用途：GitHub Pages 是纯静态托管，无法提供后端。浏览器直连商汤
- *      token.sensenova.cn 时，部分网络环境会被 CORS 预检拦截。
- *      部署本 Worker 后，在应用「设置 → 调用通道 → 代理中转」中
- *      填入 Worker 地址，即可稳定调用 deepseek-v4-flash。
+ * 用途：GitHub Pages 是纯静态托管，无法提供后端。默认「直连」模式
+ *      直接请求 api.deepseek.com（官方支持浏览器跨域），绝大多数情况可用。
+ *      仅当直连异常（如网络环境限制）时，部署本 Worker 作为兜底通道：
+ *      在应用「设置 → 调用通道 → 代理中转」填入 Worker 地址即可。
  * 部署：dashboard.cloudflare.com → Workers → 创建 Worker → 粘贴本文件 → 部署
  * 安全：API Key 由浏览器在请求头中携带，Worker 仅做透传，不落盘、不打日志。
  */
@@ -29,7 +29,7 @@ export default {
       });
     }
 
-    const url = "https://token.sensenova.cn/v1/chat/completions";
+    const url = "https://api.deepseek.com/v1/chat/completions";
 
     // 透传客户端请求体，仅追加模型名与必要头
     let body;

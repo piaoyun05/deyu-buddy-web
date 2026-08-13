@@ -199,15 +199,23 @@
     </div>
     <div class="modal-body">
       <label class="field">
-        <span>API Key（deepseek-v4-flash · 商汤 Token Plan）</span>
-        <input id="setApiKey" type="password" placeholder="sk-… 粘贴你的专属 Key" autocomplete="off">
-        <small>仅保存在本机浏览器，不出现在任何代码与服务器中。Key 获取：platform.sensenova.cn → 快速接入。</small>
+        <span>API Key（DeepSeek 官方 · 模型 deepseek-v4-flash）</span>
+        <input id="setApiKey" type="password" placeholder="sk-… 粘贴你的 DeepSeek API Key" autocomplete="off">
+        <details class="deploy-guide">
+          <summary>📘 还没有 Key？按这 3 步获取（约 2 分钟）</summary>
+          <ol>
+            <li>打开 <b>platform.deepseek.com</b> 注册/登录 → 充值少量余额（最低 ¥10，该模型非常便宜）</li>
+            <li>进入 <b>API Keys</b> 页面 → <b>创建 API Key</b> → 复制（格式 sk-…，只完整显示一次，注意保存）</li>
+            <li>把 Key 粘贴到上面的输入框 → 点下方 <b>🔌 测试连接</b> 验证</li>
+          </ol>
+        </details>
+        <small>仅保存在本机浏览器，不出现在任何代码与服务器中。</small>
       </label>
       <label class="field">
         <span>调用通道</span>
         <select id="setMode">
-          <option value="direct">直连商汤接口（服务端不支持浏览器跨域，可能失败）</option>
-          <option value="proxy">代理中转（推荐，需部署 Cloudflare Worker）</option>
+          <option value="direct">直连 api.deepseek.com（推荐，官方支持浏览器直连）</option>
+          <option value="proxy">代理中转（兜底，仅当直连异常时使用）</option>
         </select>
       </label>
       <label class="field" id="proxyField">

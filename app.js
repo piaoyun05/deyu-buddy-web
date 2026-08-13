@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    实习德育伴 · 中职生跟岗实习随身德育伙伴（网页版）
-   引擎：deepseek-v4-flash（商汤 Token Plan，每 5 小时 500 次）
+   引擎：deepseek-v4-flash（DeepSeek 官方 API，支持浏览器直连）
    架构：纯前端，数据存 localStorage，AI 走直连/代理双通道
    ============================================================ */
 
@@ -57,40 +57,19 @@ const Settings = {
   },
 };
 
-/* ---------------- 调用额度统计（每 5 小时 500 次） ---------------- */
-const Quota = {
-  WINDOW: 5 * 3600 * 1000,
-  LIMIT: 500,
-  now() {
-    const list = Store.get("quotaLog", []).filter(t => Date.now() - t < this.WINDOW);
-    Store.set("quotaLog", list);
-    return list;
-  },
-  used() { return this.now().length; },
-  remain() { return Math.max(0, this.LIMIT - this.used()); },
-  log() {
-    const list = this.now();
-    list.push(Date.now());
-    Store.set("quotaLog", list.slice(-this.LIMIT));
-  },
-};
-
 /* ---------------- AI 调用引擎 ---------------- */
 const AI = {
   endpoint() {
     const s = Settings.get();
     return s.mode === "proxy"
       ? (s.proxyUrl || "https://your-worker.workers.dev") + "/v1/chat/completions"
-      : "https://token.sensenova.cn/v1/chat/completions";
+      : "https://api.deepseek.com/v1/chat/completions";
   },
 
   async chat(messages, { json = false, maxTokens = 1200 } = {}) {
     const s = Settings.get();
     if (!s.apiKey) {
-      throw { kind: "nokey", msg: "请先在右上角 ⚙️ 设置中填入你的 API Key" };
-    }
-    if (Quota.remain() <= 0) {
-      throw { kind: "quota", msg: "过去 5 小时的调用额度（500 次）已用完，请稍后再试" };
+      throw { kind: "nokey", msg: "请先在右上角 ⚙️ 设置中填入 DeepSeek 官方 API Key" };
     }
 
     let resp;
@@ -113,20 +92,18 @@ const AI = {
       const cfg = Settings.get();
       const hint = cfg.mode === "proxy"
         ? "请检查：① 已在 Cloudflare 部署 worker/proxy.js；② 代理地址填的是 https://xxx.workers.dev；③ 地址无多余空格或引号。"
-        : "商汤接口服务端不支持浏览器跨域（CORS 预检不完善），直连模式在浏览器中必然被拦截。请按设置面板的指引部署代理后，切换为「代理中转」模式。";
+        : "请检查：① API Key 是否已填写且来自 platform.deepseek.com；② 网络连接是否正常；③ 必要时可切换「代理中转」模式兜底。";
       throw {
         kind: "network",
         msg: "网络请求失败：" + ((e && e.message) ? e.message : String(e)) + "。" + hint,
       };
     }
 
-    Quota.log();
-
     if (!resp.ok) {
       let detail = "";
       try { detail = (await resp.json()).error?.message || ""; } catch (e) { /* ignore */ }
       if (resp.status === 401 || resp.status === 403) {
-        throw { kind: "auth", msg: "API Key 无效或已过期，请到 platform.sensenova.cn 检查。" };
+        throw { kind: "auth", msg: "API Key 无效或已过期，请到 platform.deepseek.com 检查。" };
       }
       if (resp.status === 429) {
         throw { kind: "quota", msg: "接口限流（429）：额度可能已用完或请求过于频繁，请稍后再试。" };
@@ -247,7 +224,6 @@ const Student = {
     const input = $("#letterInput");
     const text = input.value.trim();
     if (!text) { toast("先写点什么再发送吧～"); return; }
-    if (Quota.remain() <= 0) { toast("过去 5 小时免费额度已用完，请稍后再试"); return; }
     input.value = "";
     const chat = $("#chatBox");
 
@@ -732,7 +708,7 @@ function saveSettings() {
     temp: $("#setTemp").value,
   });
   closeSettings();
-  toast("设置已保存 ✔ 剩余额度约 " + Quota.remain() + "/500 次");
+  toast("设置已保存 ✔ 现在可以开始使用了");
 }
 
 async function testConn() {
@@ -884,7 +860,7 @@ function switchTeacherTab(tab) {
 function updateQuotaHint() {
   const el = document.createElement("div");
   el.style.cssText = "text-align:center;font-size:12px;color:var(--ink-3);margin-top:10px;";
-  el.textContent = `💧 deepseek-v4-flash 免费额度：过去 5 小时已用 ${Quota.used()} / 500 次`;
+  el.textContent = "💧 模型：deepseek-v4-flash · DeepSeek 官方 API 直连 · 按 token 计费，Key 仅存本机浏览器";
   document.querySelector(".container").appendChild(el);
 }
 
