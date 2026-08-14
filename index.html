@@ -57,12 +57,16 @@
         </div>
       </div>
 
+      <div class="composer-who-row">
+        <input id="letterWho" type="text" maxlength="20" autocomplete="off"
+          placeholder="署名（选填）：姓名 / 学号 / 昵称，方便老师及时联系你；不填则完全匿名">
+      </div>
       <div class="composer">
         <textarea id="letterInput" rows="2" maxlength="500"
           placeholder="把心里的困惑写下来吧…（500字以内）"></textarea>
         <button class="primary-btn" id="sendLetter">发送</button>
       </div>
-      <div class="composer-tip">🔒 内容仅保存在你的本机浏览器，不会上传任何服务器</div>
+      <div class="composer-tip">🔒 内容仅保存在你的本机浏览器，不会上传任何服务器。署名选填——不填完全匿名；如遇高风险困扰，更建议留下署名，方便班主任第一时间找到你。</div>
     </div>
 
     <!-- 真实案例库 -->
@@ -73,6 +77,7 @@
       </div>
       <div class="case-tools">
         <input id="caseSearch" type="search" placeholder="搜索关键词，如：工资、师傅、不想干…">
+        <select id="caseMajor" title="按专业筛选"></select>
         <select id="caseFilter">
           <option value="">全部分类</option>
           <option value="劳资">劳资权益</option>
@@ -102,6 +107,7 @@
       <button class="seg-btn active" data-tab="board">📋 共性看板</button>
       <button class="seg-btn" data-tab="ledger">📄 德育台账</button>
       <button class="seg-btn" data-tab="alert">⚠️ 预警干预</button>
+      <button class="seg-btn" data-tab="casemanage">📂 案例管理</button>
       <button class="seg-btn" data-tab="export">📤 数据导出</button>
     </div>
 
@@ -154,6 +160,45 @@
       </div>
       <div id="alertList"></div>
       <button class="primary-btn" id="aiAdvice" style="margin-top:12px">✨ 生成干预建议</button>
+    </div>
+
+    <!-- 案例库管理 -->
+    <div class="panel" id="panel-casemanage">
+      <div class="panel-head">
+        <h2>📂 案例库管理</h2>
+        <p class="hint">实时维护案例库：下方表单新增 / 编辑 / 删除<b>本地案例</b>（本机即时生效）；编辑仓库里的 <code>cases.json</code> 并推送，即可<b>同步到所有访问者</b>（刷新页面生效）。</p>
+      </div>
+      <div class="cm-form" id="cmForm">
+        <h3 id="cmFormTitle">➕ 新增案例</h3>
+        <div class="cm-grid">
+          <label class="field"><span>案例标题</span>
+            <input id="cmTitle" type="text" placeholder="如：实习被要求做两套账">
+          </label>
+          <label class="field"><span>适用专业</span>
+            <select id="cmMajor"></select>
+          </label>
+          <label class="field"><span>分类</span>
+            <select id="cmCat">
+              <option value="劳资">劳资权益</option>
+              <option value="人际">人际关系</option>
+              <option value="规划">职业规划</option>
+              <option value="诚信">诚信守规</option>
+              <option value="其他">其他</option>
+            </select>
+          </label>
+        </div>
+        <label class="field"><span>场景描述</span>
+          <textarea id="cmScene" rows="2" placeholder="学生在实习中遇到的具体情况…"></textarea>
+        </label>
+        <label class="field"><span>引导思路</span>
+          <textarea id="cmGuide" rows="2" placeholder="如何化解，给出具体可操作的温和建议…"></textarea>
+        </label>
+        <div class="cm-actions">
+          <button class="primary-btn" id="cmSave">保存案例</button>
+          <button class="ghost-btn" id="cmCancel" style="display:none">取消编辑</button>
+        </div>
+      </div>
+      <div class="cm-list" id="cmList"></div>
     </div>
 
     <!-- 数据导出 -->
@@ -229,6 +274,13 @@
             <li>把生成的地址 <code>https://deyu-proxy.你的子域.workers.dev</code> 完整复制，粘贴到上面的「代理地址」框</li>
           </ol>
         </details>
+      </label>
+      <label class="field">
+        <span>我的专业（用于案例库智能筛选）</span>
+        <select id="setMajor">
+          <option value="">未设置</option>
+        </select>
+        <small>设置后，「真实案例」页会默认优先展示与你专业相关的案例（含通用案例）。</small>
       </label>
       <label class="field">
         <span>回复温度（越低越稳重）</span>

@@ -139,6 +139,23 @@ input, select, textarea { font-family: inherit; font-size: 15px; color: var(--in
 .composer textarea:focus { border-color: var(--primary); }
 .composer-tip { font-size: 12px; color: var(--ink-3); margin-top: 8px; }
 
+/* ---------- 署名输入 ---------- */
+.composer-who-row { margin-bottom: 8px; }
+.composer-who-row input {
+  width: 100%; border: 1px dashed var(--line); border-radius: 10px;
+  padding: 8px 12px; font-size: 13px; background: #fff; outline: none; transition: .2s;
+}
+.composer-who-row input:focus { border-color: var(--primary); border-style: solid; }
+
+/* ---------- 学生标识 / 专业标签 ---------- */
+.who-chip {
+  display: inline-block; background: #eef4ff; color: #3a6bb0; border: 1px solid #cfe0ff;
+  font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; margin: 0 6px 0 0;
+  vertical-align: middle;
+}
+.tag-major { background: var(--accent-soft); color: #b0681f; }
+.cc-top .cc-tags { display: inline-flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+
 .primary-btn {
   background: var(--primary); color: #fff; border: none; border-radius: 12px;
   padding: 11px 20px; font-size: 15px; font-weight: 600; transition: .2s; white-space: nowrap;
@@ -273,6 +290,32 @@ input, select, textarea { font-family: inherit; font-size: 15px; color: var(--in
   margin-top: 16px; background: var(--primary-soft); border-radius: var(--radius);
   padding: 14px 16px; font-size: 13px; color: var(--ink-2);
 }
+
+/* ---------- 案例库管理 ---------- */
+.cm-form {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px; margin-bottom: 14px; box-shadow: var(--shadow);
+}
+.cm-form h3 { font-size: 15px; color: var(--primary-deep); margin-bottom: 10px; }
+.cm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 640px) { .cm-grid { grid-template-columns: 1fr; } }
+.cm-form textarea {
+  width: 100%; border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px; outline: none; resize: vertical; background: #fff;
+}
+.cm-form textarea:focus { border-color: var(--primary); }
+.cm-actions { display: flex; gap: 10px; margin-top: 4px; }
+.cm-row {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px; margin-bottom: 8px; box-shadow: var(--shadow); font-size: 13px;
+}
+.cm-row .cm-title-line { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.cm-row .cm-tags { display: inline-flex; gap: 5px; }
+.cm-row .cm-scene { color: var(--ink-2); margin-top: 4px; font-size: 13px; }
+.cm-ops { flex: none; display: flex; gap: 6px; align-items: center; }
+.cm-ops .ghost-btn { padding: 6px 10px; font-size: 12px; }
+.cm-src { font-size: 12px; color: var(--ink-3); }
 
 /* ---------- 弹窗 ---------- */
 .modal-mask {

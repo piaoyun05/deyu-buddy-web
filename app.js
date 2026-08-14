@@ -47,6 +47,7 @@ const Settings = {
       mode: Store.get("mode", "direct"),
       proxyUrl: Store.get("proxyUrl", "").replace(/\/+$/, ""),
       temp: Store.get("temp", 0.7),
+      major: Store.get("major", ""),
     };
   },
   save(s) {
@@ -54,6 +55,7 @@ const Settings = {
     Store.set("mode", s.mode || "direct");
     Store.set("proxyUrl", (s.proxyUrl || "").trim().replace(/\/+$/, ""));
     Store.set("temp", Number(s.temp) || 0.7);
+    Store.set("major", s.major || "");
   },
 };
 
@@ -152,26 +154,65 @@ const MORAL_SYSTEM = [
 /* ---------------- 内置真实案例库（脱敏改编） ---------------- */
 const CaseLib = [
   // 劳资权益
-  { id: "l1", cat: "劳资", title: "实习工资迟迟不发", scene: "进厂/进店实习第三周，带教师傅说工资要压到下个月，学生担心企业拖欠。", guide: "先平和地与主管核对工资发放制度；若确实拖欠，可请学校实习指导老师出面协调，必要时拨打 12333 劳动保障热线咨询，保留工时记录作为依据。" },
-  { id: "l2", cat: "劳资", title: "加班没有加班费", scene: "订单旺季，企业要求实习生连续加班，周末也不休息，却没有任何补贴说明。", guide: "沟通时先表达配合态度，同时问清加班与调休/补贴安排；若企业规避责任，及时联系带队老师与学校，不独自硬扛。" },
-  { id: "l3", cat: "劳资", title: "工伤受伤不知怎么处理", scene: "操作设备时手指被划伤，车间只说'小伤没事'，学生担心后续没人管。", guide: "立即上报带教师傅并做好记录；保留就医票据与现场证据，告知家长和学校，由学校协助确认是否属于工伤范畴及责任归属。" },
-  { id: "l4", cat: "劳资", title: "被要求交'实习押金'", scene: "企业以'防止跑路'为由要求实习生交 500 元押金，学生心存疑虑。", guide: "任何形式的押金/变相收费都可先拒绝并保留凭证；我国法律法规对用人单位收取押金有明确限制，可向学校就业办和劳动监察部门核实。" },
+  { id: "l1", cat: "劳资", major: "通用/不限", title: "实习工资迟迟不发", scene: "进厂/进店实习第三周，带教师傅说工资要压到下个月，学生担心企业拖欠。", guide: "先平和地与主管核对工资发放制度；若确实拖欠，可请学校实习指导老师出面协调，必要时拨打 12333 劳动保障热线咨询，保留工时记录作为依据。" },
+  { id: "l2", cat: "劳资", major: "通用/不限", title: "加班没有加班费", scene: "订单旺季，企业要求实习生连续加班，周末也不休息，却没有任何补贴说明。", guide: "沟通时先表达配合态度，同时问清加班与调休/补贴安排；若企业规避责任，及时联系带队老师与学校，不独自硬扛。" },
+  { id: "l3", cat: "劳资", major: "机械加工/数控", title: "工伤受伤不知怎么处理", scene: "操作设备时手指被划伤，车间只说'小伤没事'，学生担心后续没人管。", guide: "立即上报带教师傅并做好记录；保留就医票据与现场证据，告知家长和学校，由学校协助确认是否属于工伤范畴及责任归属。" },
+  { id: "l4", cat: "劳资", major: "通用/不限", title: "被要求交'实习押金'", scene: "企业以'防止跑路'为由要求实习生交 500 元押金，学生心存疑虑。", guide: "任何形式的押金/变相收费都可先拒绝并保留凭证；我国法律法规对用人单位收取押金有明确限制，可向学校就业办和劳动监察部门核实。" },
   // 人际关系
-  { id: "r1", cat: "人际", title: "师傅太严厉，总挨批评", scene: "带教师傅要求高，做错一点就当众批评，学生觉得委屈、想逃避上班。", guide: "理解师傅'严师'的出发点；找合适时机私下请教'哪里可以做得更好'，把批评转化为具体改进点；委屈时先记情绪日记，再决定是否找老师倾诉。" },
-  { id: "r2", cat: "人际", title: "同事之间的排挤感", scene: "老员工讲话带刺，小团体明显，实习生感觉被孤立，中午吃饭都插不上话。", guide: "不急着'融入'，先做好手头事；主动参与力所能及的杂活建立信任；同时拓宽社交圈（同批实习生、学校朋友），减少对单一环境的情绪依赖。" },
-  { id: "r3", cat: "人际", title: "被塞'不属于自己的活'", scene: "同事把杂活都推给实习生，学生很忙但学不到核心技术，感觉被当免费劳动力。", guide: "学技术期间'多干活'不等于被欺负，先判断是常态还是恶意；可通过师傅安排任务而非个人帮忙，适当表达'我想多学点岗位技能'的意愿。" },
-  { id: "r4", cat: "人际", title: "和同组同学闹矛盾", scene: "搭档做事拖拉，考核又是小组绑定，学生觉得被拖累，关系紧张。", guide: "先私下温和沟通分工；若沟通无效，向带队老师反映问题时对事不对人；学会区分'合作问题'与'人品的否定'，不把矛盾上升为人身攻击。" },
+  { id: "r1", cat: "人际", major: "通用/不限", title: "师傅太严厉，总挨批评", scene: "带教师傅要求高，做错一点就当众批评，学生觉得委屈、想逃避上班。", guide: "理解师傅'严师'的出发点；找合适时机私下请教'哪里可以做得更好'，把批评转化为具体改进点；委屈时先记情绪日记，再决定是否找老师倾诉。" },
+  { id: "r2", cat: "人际", major: "通用/不限", title: "同事之间的排挤感", scene: "老员工讲话带刺，小团体明显，实习生感觉被孤立，中午吃饭都插不上话。", guide: "不急着'融入'，先做好手头事；主动参与力所能及的杂活建立信任；同时拓宽社交圈（同批实习生、学校朋友），减少对单一环境的情绪依赖。" },
+  { id: "r3", cat: "人际", major: "通用/不限", title: "被塞'不属于自己的活'", scene: "同事把杂活都推给实习生，学生很忙但学不到核心技术，感觉被当免费劳动力。", guide: "学技术期间'多干活'不等于被欺负，先判断是常态还是恶意；可通过师傅安排任务而非个人帮忙，适当表达'我想多学点岗位技能'的意愿。" },
+  { id: "r4", cat: "人际", major: "通用/不限", title: "和同组同学闹矛盾", scene: "搭档做事拖拉，考核又是小组绑定，学生觉得被拖累，关系紧张。", guide: "先私下温和沟通分工；若沟通无效，向带队老师反映问题时对事不对人；学会区分'合作问题'与'人品的否定'，不把矛盾上升为人身攻击。" },
   // 职业规划
-  { id: "p1", cat: "规划", title: "实习太累，不想干了", scene: "每天站 8 小时、重复劳动，学生打退堂鼓，想直接请假或放弃。", guide: "区分'辛苦'与'不适合'：先定一个小目标（坚持到实习满 X 周）并记录每天学到的技能；把辞职决定推迟到冷静期后，再与学校老师一起评估。" },
-  { id: "p2", cat: "规划", title: "觉得岗位和所学专业不对口", scene: "学的数控，却被安排去包装流水线，学生觉得实习没意义。", guide: "先确认实习目标（体验职场/掌握基础规范也是收获）；主动向师傅申请轮岗或接触核心工序；把'不对口'的困惑整理成问题清单，找专业老师分析路径。" },
-  { id: "p3", cat: "规划", title: "对未来一片迷茫", scene: "不知道实习完是升学还是就业，感觉自己和别人差很远。", guide: "迷茫是正常的，不必自我否定；用一周时间列出自己的兴趣、擅长、怕什么，做一次简单的生涯探索（见成长自测）；主动找班主任或职业指导老师约谈一次。" },
-  { id: "p4", cat: "规划", title: "想换一个岗位试试", scene: "刚实习两周就发现自己对当前岗位没有热情，想申请换岗。", guide: "先给岗位一个'观察期'（至少完成第一个小任务）；换岗前先了解目标岗位，通过带队老师走正规申请流程，避免擅自离岗影响实习鉴定。" },
+  { id: "p1", cat: "规划", major: "通用/不限", title: "实习太累，不想干了", scene: "每天站 8 小时、重复劳动，学生打退堂鼓，想直接请假或放弃。", guide: "区分'辛苦'与'不适合'：先定一个小目标（坚持到实习满 X 周）并记录每天学到的技能；把辞职决定推迟到冷静期后，再与学校老师一起评估。" },
+  { id: "p2", cat: "规划", major: "机械加工/数控", title: "觉得岗位和所学专业不对口", scene: "学的数控，却被安排去包装流水线，学生觉得实习没意义。", guide: "先确认实习目标（体验职场/掌握基础规范也是收获）；主动向师傅申请轮岗或接触核心工序；把'不对口'的困惑整理成问题清单，找专业老师分析路径。" },
+  { id: "p3", cat: "规划", major: "通用/不限", title: "对未来一片迷茫", scene: "不知道实习完是升学还是就业，感觉自己和别人差很远。", guide: "迷茫是正常的，不必自我否定；用一周时间列出自己的兴趣、擅长、怕什么，做一次简单的生涯探索（见成长自测）；主动找班主任或职业指导老师约谈一次。" },
+  { id: "p4", cat: "规划", major: "通用/不限", title: "想换一个岗位试试", scene: "刚实习两周就发现自己对当前岗位没有热情，想申请换岗。", guide: "先给岗位一个'观察期'（至少完成第一个小任务）；换岗前先了解目标岗位，通过带队老师走正规申请流程，避免擅自离岗影响实习鉴定。" },
   // 诚信守规
-  { id: "d1", cat: "诚信", title: "想找人代写实习报告", scene: "实习日志和报告太多，有同学提议'网上代写'，学生有些心动。", guide: "代写属学术不诚信，一旦被查会直接影响实习鉴定与毕业，还可能被企业记录；可以请老师帮梳理'日志怎么写更高效'，学会用碎片时间记录要点。" },
-  { id: "d2", cat: "诚信", title: "顺手带走企业的小物料", scene: "车间物料管理松，个别同事'拿一点没事'，学生犹豫要不要效仿。", guide: "'别人拿'不等于'你可以拿'，物料属企业财产，被发现会记入实习档案；遇到这种现象可以提醒或报告带队老师，守住职业底线比短期小利重要。" },
-  { id: "d3", cat: "诚信", title: "考勤上想'睁一只眼'", scene: "同事帮忙'打卡'，学生迟到几分钟不想被记录，纠结是否配合。", guide: "考勤诚信直接影响企业对你的评价；偶尔一次可主动向主管说明并补时；'帮忙打卡'看似小事，实则是职业诚信的试金石。" },
-  { id: "d4", cat: "诚信", title: "犯了错想瞒下来", scene: "操作失误造成小损失，怕被批评，想瞒着不说或嫁祸他人。", guide: "诚实坦白往往比隐瞒损失更小、更被信任；及时上报并主动提出补救方案，展示的是责任意识；犯错是成长的一部分，学校和企业都愿意给敢担当的年轻人机会。" },
+  { id: "d1", cat: "诚信", major: "通用/不限", title: "想找人代写实习报告", scene: "实习日志和报告太多，有同学提议'网上代写'，学生有些心动。", guide: "代写属学术不诚信，一旦被查会直接影响实习鉴定与毕业，还可能被企业记录；可以请老师帮梳理'日志怎么写更高效'，学会用碎片时间记录要点。" },
+  { id: "d2", cat: "诚信", major: "机械加工/数控", title: "顺手带走企业的小物料", scene: "车间物料管理松，个别同事'拿一点没事'，学生犹豫要不要效仿。", guide: "'别人拿'不等于'你可以拿'，物料属企业财产，被发现会记入实习档案；遇到这种现象可以提醒或报告带队老师，守住职业底线比短期小利重要。" },
+  { id: "d3", cat: "诚信", major: "通用/不限", title: "考勤上想'睁一只眼'", scene: "同事帮忙'打卡'，学生迟到几分钟不想被记录，纠结是否配合。", guide: "考勤诚信直接影响企业对你的评价；偶尔一次可主动向主管说明并补时；'帮忙打卡'看似小事，实则是职业诚信的试金石。" },
+  { id: "d4", cat: "诚信", major: "通用/不限", title: "犯了错想瞒下来", scene: "操作失误造成小损失，怕被批评，想瞒着不说或嫁祸他人。", guide: "诚实坦白往往比隐瞒损失更小、更被信任；及时上报并主动提出补救方案，展示的是责任意识；犯错是成长的一部分，学校和企业都愿意给敢担当的年轻人机会。" },
 ];
+
+/* 专业清单（用于案例筛选 / 设置 / 管理端） */
+const MAJORS = ["机械加工/数控", "电子信息/计算机", "汽车维修/新能源", "旅游服务/餐饮", "财经商贸/会计", "护理/医药卫生"];
+
+/* ---------------- 案例库：内置 + 线上 cases.json + 本地管理 ---------------- */
+const Cases = {
+  remote: [],
+  customKey: "customCases",
+  /* 拉取线上 cases.json（带缓存穿透），维护者推送更新即全站同步 */
+  async loadRemote() {
+    try {
+      const r = await fetch("cases.json?v=" + Date.now(), { cache: "no-store" });
+      if (r.ok) {
+        const arr = await r.json();
+        if (Array.isArray(arr)) {
+          this.remote = arr.filter(c => c && c.title);
+          console.log("案例库已同步线上 cases.json（" + this.remote.length + " 条）");
+        }
+      }
+    } catch (e) { /* 离线/本地环境：忽略，回退内置库 */ }
+  },
+  custom() { return Store.get(this.customKey, []); },
+  saveCustom(list) { Store.set(this.customKey, list); },
+  /* 合并：本地新增 > 线上 > 内置，按标题去重 */
+  all() {
+    const seen = new Set();
+    const out = [];
+    const push = (c, src) => {
+      if (c && c.title && !seen.has(c.title)) {
+        seen.add(c.title);
+        out.push(Object.assign({}, c, { _src: src }));
+      }
+    };
+    this.custom().forEach(c => push(c, "custom"));
+    this.remote.forEach(c => push(c, "remote"));
+    CaseLib.forEach(c => push(c, "builtin"));
+    return out;
+  },
+};
 
 /* ---------------- 脱敏 ---------------- */
 function desensitize(text) {
@@ -224,6 +265,7 @@ const Student = {
     const input = $("#letterInput");
     const text = input.value.trim();
     if (!text) { toast("先写点什么再发送吧～"); return; }
+    const who = ($("#letterWho").value || "").trim().slice(0, 20);
     input.value = "";
     const chat = $("#chatBox");
 
@@ -252,6 +294,7 @@ const Student = {
 
       Records.add({
         msg: desensitize(text),
+        who: who,
         category: json?.category || inferCat(text),
         risk: json?.risk || riskHint,
         aiReply: finalText,
@@ -269,18 +312,26 @@ const Student = {
   renderCases() {
     const kw = ($("#caseSearch").value || "").trim().toLowerCase();
     const cat = $("#caseFilter").value;
-    const list = CaseLib.filter(c =>
+    const major = $("#caseMajor").value;
+    const list = Cases.all().filter(c =>
       (!cat || c.cat === cat) &&
+      (!major || c.major === major || c.major === "通用/不限") &&
       (!kw || (c.title + c.scene + c.guide).toLowerCase().includes(kw))
     );
     const box = $("#caseList");
     if (!list.length) {
-      box.innerHTML = '<div class="empty-tip">没有匹配的案例，换个关键词试试 🔍</div>';
+      box.innerHTML = '<div class="empty-tip">没有匹配的案例，换个关键词或分类试试 🔍</div>';
       return;
     }
     box.innerHTML = list.map(c => `
       <div class="case-card">
-        <div class="cc-top"><h3>${esc(c.title)}</h3><span class="tag tag-cat">${esc(c.cat)}</span></div>
+        <div class="cc-top">
+          <h3>${esc(c.title)}</h3>
+          <span class="cc-tags">
+            <span class="tag tag-cat">${esc(c.cat)}</span>
+            ${c.major ? `<span class="tag tag-major">${esc(c.major)}</span>` : ""}
+          </span>
+        </div>
         <p class="cc-scene">${esc(c.scene)}</p>
         <div class="cc-guide"><b>引导思路</b>：${esc(c.guide)}</div>
       </div>`).join("");
@@ -484,6 +535,7 @@ const Teacher = {
           <div class="rec-row">
             <span class="rec-time">${fmtTime(r.time)}${r.isDemo ? " · 示例" : ""}</span>
             <span class="tag ${riskTagClass(r.risk)}">${riskLabel(r.risk)}</span>
+            ${r.who ? `<span class="who-chip">👤 ${esc(r.who)}</span>` : ""}
             <div class="rec-msg">${esc(r.msg)}</div>
           </div>`).join("")}
       </div>`).join("");
@@ -605,6 +657,7 @@ const Teacher = {
       <div class="alert-card lv-${r.risk}">
         <div class="ac-top">
           <span class="tag ${riskTagClass(r.risk)}">${riskLabel(r.risk)}</span>
+          ${r.who ? `<span class="who-chip">👤 ${esc(r.who)}</span>` : ""}
           <span class="rec-time">${fmtTime(r.time)}${r.isDemo ? " · 示例" : ""}</span>
         </div>
         <div class="ac-msg">${esc(r.msg)}</div>
@@ -637,10 +690,11 @@ const Teacher = {
   exportCsv() {
     const list = this.getRecords();
     if (!list.length) { toast("暂无数据可导出"); return; }
-    const rows = [["时间", "分类", "风险等级", "内容（脱敏）", "AI回复摘要"]];
+    const rows = [["时间", "学生标识", "分类", "风险等级", "内容（脱敏）", "AI回复摘要"]];
     list.forEach(r => {
       rows.push([
         new Date(r.time).toLocaleString("zh-CN"),
+        (r.who || "匿名").replace(/[\n\r,]/g, " "),
         r.category || "其他",
         riskLabel(r.risk),
         (r.msg || "").replace(/[\n\r,]/g, " "),
@@ -655,6 +709,94 @@ const Teacher = {
     a.click();
     URL.revokeObjectURL(a.href);
     toast("CSV 已导出（可用 Excel 打开）");
+  },
+
+  /* ---------- 案例库管理 ---------- */
+  renderCaseManage() {
+    const box = $("#cmList");
+    const list = Cases.all();
+    let customIdx = 0;
+    if (!list.length) {
+      box.innerHTML = '<div class="empty-tip">案例库为空，先在上方新增一个案例吧 📂</div>';
+      return;
+    }
+    box.innerHTML = list.map(c => {
+      const idx = c._src === "custom" ? customIdx++ : -1;
+      const ops = idx >= 0
+        ? `<button class="ghost-btn cm-edit" data-idx="${idx}">✏️ 编辑</button>
+           <button class="ghost-btn cm-del" data-idx="${idx}">🗑 删除</button>`
+        : `<span class="cm-src">${c._src === "remote" ? "🌐 线上库（编辑 cases.json 同步）" : "📦 内置库"}</span>`;
+      return `
+      <div class="cm-row">
+        <div class="cm-info">
+          <div class="cm-title-line">
+            <b>${esc(c.title)}</b>
+            <span class="cm-tags">
+              <span class="tag tag-cat">${esc(c.cat)}</span>
+              ${c.major ? `<span class="tag tag-major">${esc(c.major)}</span>` : ""}
+            </span>
+          </div>
+          <div class="cm-scene">${esc(c.scene)}</div>
+        </div>
+        <div class="cm-ops">${ops}</div>
+      </div>`;
+    }).join("");
+  },
+
+  editCustom(i) {
+    const c = Cases.custom()[i];
+    if (!c) return;
+    Cases._editingIdx = i;
+    $("#cmTitle").value = c.title;
+    $("#cmCat").value = c.cat || "劳资";
+    $("#cmMajor").value = c.major || "";
+    $("#cmScene").value = c.scene;
+    $("#cmGuide").value = c.guide;
+    $("#cmFormTitle").textContent = "✏️ 编辑案例";
+    $("#cmCancel").style.display = "";
+    $("#cmForm").scrollIntoView({ behavior: "smooth", block: "start" });
+  },
+
+  saveCustomCase() {
+    const title = $("#cmTitle").value.trim();
+    const cat = $("#cmCat").value;
+    const major = $("#cmMajor").value;
+    const scene = $("#cmScene").value.trim();
+    const guide = $("#cmGuide").value.trim();
+    if (!title || !scene || !guide) { toast("标题、场景描述、引导思路都要填哦"); return; }
+    const list = Cases.custom();
+    const obj = { title, cat, major, scene, guide };
+    if (Cases._editingIdx != null && list[Cases._editingIdx]) {
+      list[Cases._editingIdx] = obj;
+      toast("已保存修改 ✔");
+    } else {
+      list.push(obj);
+      toast("已新增案例 ✔（本机生效；同步所有访问者需更新线上 cases.json）");
+    }
+    Cases.saveCustom(list);
+    Cases._editingIdx = null;
+    $("#cmFormTitle").textContent = "➕ 新增案例";
+    $("#cmCancel").style.display = "none";
+    this.resetCaseForm();
+    this.renderCaseManage();
+  },
+
+  resetCaseForm() {
+    $("#cmTitle").value = "";
+    $("#cmCat").value = "劳资";
+    $("#cmMajor").value = "";
+    $("#cmScene").value = "";
+    $("#cmGuide").value = "";
+  },
+
+  delCustom(i) {
+    const list = Cases.custom();
+    if (i < list.length && confirm("确定删除这个本地案例吗？")) {
+      list.splice(i, 1);
+      Cases.saveCustom(list);
+      this.renderCaseManage();
+      toast("已删除");
+    }
   },
 };
 
@@ -694,6 +836,7 @@ function openSettings() {
   $("#setProxyUrl").value = s.proxyUrl;
   $("#setTemp").value = s.temp;
   $("#tempLabel").textContent = s.temp;
+  $("#setMajor").value = s.major;
   $("#proxyField").style.display = s.mode === "proxy" ? "" : "none";
   $("#testResult").textContent = "";
   $("#settingsModal").classList.add("show");
@@ -706,8 +849,11 @@ function saveSettings() {
     mode: $("#setMode").value,
     proxyUrl: $("#setProxyUrl").value.trim(),
     temp: $("#setTemp").value,
+    major: $("#setMajor").value,
   });
   closeSettings();
+  fillMajorOptions();
+  Student.renderCases();
   toast("设置已保存 ✔ 现在可以开始使用了");
 }
 
@@ -787,6 +933,7 @@ function init() {
     $("#panel-" + tab).classList.add("active");
     if (tab === "board") Teacher.renderBoard();
     if (tab === "alert") Teacher.renderAlerts();
+    if (tab === "casemanage") Teacher.renderCaseManage();
   });
 
   /* 学生端交互 */
@@ -796,6 +943,19 @@ function init() {
   });
   $("#caseSearch").addEventListener("input", () => Student.renderCases());
   $("#caseFilter").addEventListener("change", () => Student.renderCases());
+  $("#caseMajor").addEventListener("change", () => Student.renderCases());
+
+  /* 成长自测：选项选中 + 提交（事件委托，兼容动态渲染） */
+  $("#selftestArea").addEventListener("click", e => {
+    const opt = e.target.closest(".opt");
+    if (opt) {
+      const q = opt.closest(".quiz-q");
+      q.querySelectorAll(".opt").forEach(b => b.classList.remove("selected"));
+      opt.classList.add("selected");
+      return;
+    }
+    if (e.target.id === "calcQuiz") Student.calcQuiz();
+  });
 
   /* 教师端交互 */
   $("#importDemo").addEventListener("click", () => {
@@ -814,6 +974,21 @@ function init() {
   $("#genLedger").addEventListener("click", () => Teacher.genLedger());
   $("#aiAdvice").addEventListener("click", () => Teacher.aiAdvice());
   $("#exportCsv").addEventListener("click", () => Teacher.exportCsv());
+
+  /* 案例管理 */
+  $("#cmSave").addEventListener("click", () => Teacher.saveCustomCase());
+  $("#cmCancel").addEventListener("click", () => {
+    Cases._editingIdx = null;
+    $("#cmFormTitle").textContent = "➕ 新增案例";
+    $("#cmCancel").style.display = "none";
+    Teacher.resetCaseForm();
+  });
+  $("#cmList").addEventListener("click", e => {
+    const ed = e.target.closest(".cm-edit");
+    if (ed) { Teacher.editCustom(Number(ed.dataset.idx)); return; }
+    const del = e.target.closest(".cm-del");
+    if (del) { Teacher.delCustom(Number(del.dataset.idx)); return; }
+  });
   $("#exportPdf").addEventListener("click", () => {
     if (!$("#ledgerDoc")) { toast("请先在「德育台账」页生成台账"); switchTeacherTab("ledger"); return; }
     const pa = $("#printArea");
@@ -840,13 +1015,36 @@ function init() {
   });
 
   /* 初始渲染 */
+  fillMajorOptions();
+  fillManageMajorOptions();
+  $("#setMajor").innerHTML = '<option value="">未设置</option>' +
+    MAJORS.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join("");
   Student.renderCases();
   Student.renderQuiz();
   Teacher.renderBoard();
   Teacher.renderAlerts();
 
+  /* 拉取线上案例库（维护者推送 cases.json 后刷新即同步） */
+  Cases.loadRemote().then(() => { Student.renderCases(); });
+
   /* 顶部显示额度提示 */
   updateQuotaHint();
+}
+
+/* 案例页专业筛选下拉（默认优先学生的专业） */
+function fillMajorOptions() {
+  const s = Settings.get();
+  const sel = $("#caseMajor");
+  sel.innerHTML = '<option value="">全部专业</option>' +
+    (s.major ? `<option value="${esc(s.major)}">⭐ 我的专业（${esc(s.major)}）</option>` : "") +
+    MAJORS.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join("");
+  sel.value = s.major || "";
+}
+
+/* 案例管理表单的专业下拉 */
+function fillManageMajorOptions() {
+  $("#cmMajor").innerHTML = '<option value="">通用/不限</option>' +
+    MAJORS.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join("");
 }
 
 function switchTeacherTab(tab) {
@@ -855,6 +1053,7 @@ function switchTeacherTab(tab) {
   $("#panel-" + tab).classList.add("active");
   if (tab === "board") Teacher.renderBoard();
   if (tab === "alert") Teacher.renderAlerts();
+  if (tab === "casemanage") Teacher.renderCaseManage();
 }
 
 function updateQuotaHint() {
